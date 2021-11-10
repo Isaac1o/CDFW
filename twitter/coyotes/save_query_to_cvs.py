@@ -39,7 +39,7 @@ def join_dfs(df1, df2) -> pd.DataFrame:
     """
     df_joined = pd.concat([df1, df2], axis=0)
     df_joined = df_joined.reset_index(drop=True)
-    df_joined = df_joined.drop_duplicates(subset=['tweet_id'])
+    df_joined = df_joined.drop_duplicates(subset=['tweet'])
     return df_joined
 
 

@@ -14,7 +14,7 @@ def create_vader():
 def score_tweet(tweet: str) -> dict:
     """
     Given tweet return a dictionary containing:
-    [negative_score, neutral_score, positive_score, compound_score, sentiment_classification]
+    negative_score, neutral_score, positive_score, compound_score, sentiment_classification
     :param tweet:
     :return:
     """
@@ -40,4 +40,3 @@ def score_tweet(tweet: str) -> dict:
                  'sent_class': sent_class}
 
     return sent_dict
-
