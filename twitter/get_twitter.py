@@ -124,10 +124,10 @@ def query_in_df(api,
     Searches for tweets with given query and puts the results in a dataframe.
     :param api: twitter api object
     :param query: query used to search for tweets
-    :param location: location you want to search. ie. "San Francisco" or "Los Angles"
+    :param location: location you want to search. ie. "San Francisco" or "Los Angeles"
     :param coordinates: coordinates of location in latitude and longitude
     :param radius: search radius from given coordinates or location. ie "50mi" or "30km"
-    :param search_type: If location is given, specify is the location is a "city", "country", or "neighborhood"
+    :param search_type: If location is given, specify the location is a "city", "country", or "neighborhood"
     :param max_tweets: Maximum number of tweets to return
     :return:
     """
