@@ -2,6 +2,7 @@ import pandas as pd
 from get_twitter import *
 from datetime import datetime
 from classify_tweets import *
+from sentiment import *
 
 
 LA_coords = '34.052235,-118.243683'
@@ -55,7 +56,7 @@ def save_query(df_today: pd.DataFrame, add_to_main=False) -> None:
     if add_to_main:
         df_main = load_full_df()
         df_joined = join_dfs(df_main, df_today)
-        df_joined.to_csv('queries/all_queries.csv', index=False, encoding='utf-8-sig')
+        df_joined.to_csv('data/all_queries.csv', index=False, encoding='utf-8-sig')
         print(f'{df_joined.shape[0] - df_main.shape[0]} tweets added')
 
 
@@ -68,6 +69,25 @@ def add_classification_to_df(df) -> pd.DataFrame:
     tweets = df['tweet']
     classification_values = classify_tweets(tweets)
     df['relevant'] = classification_values
+
+    return df
+
+
+def add_sentiment_to_df(df) -> pd.DataFrame:
+    """
+    Add five columns consisting of sentiment data:
+    - negative_sent_score
+    - neutral_sent_score
+    - positive_sent_score
+    - compound_sent_score
+    - sent_classification
+    :param df:
+    :return:
+    """
+    tweets = df['tweet']
+    sentiment_values = [score_tweet(tweet) for tweet in tweets]
+    df_sent = pd.DataFrame.from_records(sentiment_values)
+    df = pd.concat([df, df_sent], axis=1)
 
     return df
 
@@ -86,7 +106,9 @@ def main():
     df_sd = normalize_df(df_sd)
     df_both = join_dfs(df_la, df_sd)
     df_both_classified = add_classification_to_df(df_both)
-    save_query(df_both_classified, add_to_main=True)
+    df_both_classified_sent = add_sentiment_to_df(df_both_classified)
+    save_query(df_both_classified_sent, add_to_main=True)
 
 
-main()
+if __name__ == "__main__":
+    main()

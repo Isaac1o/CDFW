@@ -11,9 +11,9 @@ def create_vader():
     return vader
 
 
-def score_tweet(tweet: str) -> list:
+def score_tweet(tweet: str) -> dict:
     """
-    Given tweet return a list containing:
+    Given tweet return a dictionary containing:
     [negative_score, neutral_score, positive_score, compound_score, sentiment_classification]
     :param tweet:
     :return:
@@ -33,5 +33,11 @@ def score_tweet(tweet: str) -> list:
     else:
         sent_class = 'neutral'
 
-    return [neg, neu, pos, compound, sent_class]
+    sent_dict = {'neg_sent_score': neg,
+                 'neu_sent_score': neu,
+                 'pos_sent_score': pos,
+                 'compound_sent_score': compound,
+                 'sent_class': sent_class}
+
+    return sent_dict
 
