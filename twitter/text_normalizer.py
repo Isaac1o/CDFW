@@ -1,6 +1,6 @@
 import spacy
 """
-This library is used to for preprocessing tweets which are fed into CountVectorizer() which creates a wordcount
+This library is used for preprocessing tweets which are fed into CountVectorizer() which creates a wordcount
 matrix used for a Naive Bayes model.
 """
 
