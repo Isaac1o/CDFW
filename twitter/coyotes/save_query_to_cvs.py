@@ -8,7 +8,8 @@ from sentiment import *
 LA_coords = '34.052235,-118.243683'
 SD_coords = '32.715736,-117.161087'
 irrelevant_words = ['ugly', 'having', 'drugs', 'movie', 'team', 'halloween', 'season', 'hawks',
-                    'predictions', 'sports', 'restaurant', 'soccer', 'basketball', 'tennis', 'ball']
+                    'predictions', 'sports', 'restaurant', 'soccer', 'basketball', 'tennis', 'ball',
+                    'indian', 'ducks', 'game', 'school', 'arizona', 'nhl', 'win']
 
 
 def load_full_df() -> pd.DataFrame:
