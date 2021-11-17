@@ -8,6 +8,7 @@ LA_coords = '34.052235,-118.243683'
 SD_coords = '32.715736,-117.161087'
 SF_coords = '37.7749,-122.4194'
 
+
 def load_full_df(path_to_data) -> pd.DataFrame:
     df_full = pd.read_csv(path_to_data)
     return df_full
@@ -40,7 +41,7 @@ def join_dfs(df1, df2) -> pd.DataFrame:
     return df_joined
 
 
-def save_query(df_today: pd.DataFrame, name, add_to_main=False, path_to_main=None) -> None:
+def save_query(df_today: pd.DataFrame, name, dir, add_to_main=False, path_to_main=None) -> None:
     """
     Save the given dataframe to a csv file in the format `query_YEAR-MONTH-DAY_HOUR:MINUTE.csv`.
     If add_to_main is True, the given dataframe with be joined with the dataframe containing all tweets.
@@ -51,7 +52,8 @@ def save_query(df_today: pd.DataFrame, name, add_to_main=False, path_to_main=Non
     :return: None
     """
     date_and_time = datetime.now().strftime('%Y-%m-%d_%H:%M')
-    df_today.to_csv(f'coyotes/data/query_{name}_{date_and_time}.csv', index=False, encoding='utf-8-sig')
+    print(f'{name}: saving {df_today.shape[0]} tweets')
+    df_today.to_csv(f'{dir}/data/query_{name}_{date_and_time}.csv', index=False, encoding='utf-8-sig')
     if add_to_main:
         try:
             df_main = load_full_df(path_to_main)
