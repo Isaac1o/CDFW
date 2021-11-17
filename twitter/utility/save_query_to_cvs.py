@@ -6,10 +6,7 @@ from utility.sentiment import *
 
 LA_coords = '34.052235,-118.243683'
 SD_coords = '32.715736,-117.161087'
-# irrelevant_words = ['ugly', 'having', 'drugs', 'movie', 'team', 'halloween', 'season', 'hawks',
-#                     'predictions', 'sports', 'restaurant', 'soccer', 'basketball', 'tennis', 'ball',
-#                     'indian', 'ducks', 'game', 'school', 'arizona', 'nhl', 'win']
-
+SF_coords = '37.7749,-122.4194'
 
 def load_full_df(path_to_data) -> pd.DataFrame:
     df_full = pd.read_csv(path_to_data)
@@ -47,6 +44,7 @@ def save_query(df_today: pd.DataFrame, name, add_to_main=False, path_to_main=Non
     """
     Save the given dataframe to a csv file in the format `query_YEAR-MONTH-DAY_HOUR:MINUTE.csv`.
     If add_to_main is True, the given dataframe with be joined with the dataframe containing all tweets.
+    :param name:
     :param path_to_main: Path to csv with all the tweets
     :param df_today:
     :param add_to_main:
@@ -59,7 +57,7 @@ def save_query(df_today: pd.DataFrame, name, add_to_main=False, path_to_main=Non
             df_main = load_full_df(path_to_main)
             df_joined = join_dfs(df_main, df_today)
             df_joined.to_csv(path_to_main, index=False, encoding='utf-8-sig')
-            print(f'{df_joined.shape[0] - df_main.shape[0]} tweets added')
+            print(f'{name}: {df_joined.shape[0] - df_main.shape[0]} tweets added')
         except Exception as e:
             print(e)
             print('Path to data not included')
