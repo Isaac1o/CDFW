@@ -53,13 +53,20 @@ def save_query(df_today: pd.DataFrame, name, dir, add_to_main=False, path_to_mai
     """
     date_and_time = datetime.now().strftime('%Y-%m-%d_%H:%M')
     print(f'{name}: saving {df_today.shape[0]} tweets')
-    df_today.to_csv(f'{dir}/data/query_{name}_{date_and_time}.csv', index=False, encoding='utf-8-sig')
+    df_today.to_csv(f'{dir}/data/{name}/query_{name}_{date_and_time}.csv', index=False, encoding='utf-8-sig')
+
+    # Add query to all queries for specific location
+    df_name = pd.read_csv(f'{dir}/data/{name}/all_queries_{name}.csv')
+    df_name_full = join_dfs(df_name, df_today)
+    df_name_full.to_csv(f'{dir}/data/{name}/all_queries_{name}.csv', index=False, encoding='utf-8-sig')
+    print(f'{name}: {df_name_full.shape[0] - df_name.shape[0]} tweets added to {name} main csv')
+
     if add_to_main:
         try:
             df_main = load_full_df(path_to_main)
             df_joined = join_dfs(df_main, df_today)
             df_joined.to_csv(path_to_main, index=False, encoding='utf-8-sig')
-            print(f'{name}: {df_joined.shape[0] - df_main.shape[0]} tweets added')
+            print(f'{name}: {df_joined.shape[0] - df_main.shape[0]} tweets added to main csv')
         except Exception as e:
             print(e)
             print('Path to data not included')
