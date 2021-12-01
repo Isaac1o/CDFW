@@ -8,7 +8,7 @@ def main():
     and San Diego and save them into a csv. It will also be added to the csv with all entries.
     :return: None
     """
-    irrelevant_words = ['ugly', 'having', 'drugs', 'movie', 'team', 'halloween', 'season', 'hawks',
+    irrelevant_words = ['ugly', 'drugs', 'movie', 'team', 'halloween', 'season', 'hawks',
                         'predictions', 'sports', 'restaurant', 'soccer', 'basketball', 'tennis', 'ball',
                         'indian', 'ducks', 'game', 'school', 'arizona', 'nhl', 'win']
 
