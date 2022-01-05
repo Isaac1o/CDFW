@@ -14,7 +14,7 @@ def load_spacy():
     return sp
 
 
-def tweet_preprocessor(tweet:str) -> str:
+def tweet_preprocessor(tweet: str) -> str:
     """
     Removes numbers, words that start with @, links, and words less than 2 characters
     :param tweet:
@@ -25,6 +25,6 @@ def tweet_preprocessor(tweet:str) -> str:
     words = [w for w in words if w.is_alpha is True]
     words = [w.text for w in words]
     words = [w for w in words if not w.startswith('@') and not w.startswith('http')]
-    words = [w for w in words if len(w) > 2]
+    words = [w for w in words if len(w) >= 2]
     words = ' '.join(words)
     return words

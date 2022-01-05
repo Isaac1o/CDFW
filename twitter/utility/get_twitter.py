@@ -5,17 +5,18 @@ import pandas as pd
 
 def loadkeys(filename):
     """"
-    load twitter api keys/tokens from CSV file with form
+    load twitter api keys/tokens from CSV file with format
     consumer_key, consumer_secret, access_token, access_token_secret
     """
     with open(filename) as f:
-        items = f.readlines()[1].strip().split(',')
-        return items
+        keys = f.readlines()[1].strip().split(',')
+
+    return keys
 
 
 def authenticate(twitter_auth_filename):
     """
-    Given a file name containing the Twitter keys and tokens,
+    Given a CSV file containing the Twitter keys and tokens,
     create and return a tweepy API object.
     """
     consumer_key, consumer_secret, access_token, access_token_secret = loadkeys(twitter_auth_filename)
@@ -37,8 +38,8 @@ def create_df(searched_tweets: List[dict]) -> pd.DataFrame:
 
 def process_status(status) -> dict:
     """
-    Process the given tweet (status)
-    :param status: Raw tweet information that the twitter api returns
+    Parse select information from the given tweet (status).
+    :param status: Tweet in JSON that the twitter api returns
     :return: dictionary containing wanted info from tweet
     """
     status_info = {'created': status.created_at,
