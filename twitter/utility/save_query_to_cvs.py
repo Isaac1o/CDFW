@@ -1,3 +1,5 @@
+import pandas as pd
+
 from utility.get_twitter import *
 from datetime import datetime
 from utility.classify_tweets import *
@@ -7,6 +9,9 @@ from utility.sentiment import *
 LA_coords = '34.052235,-118.243683'
 SD_coords = '32.715736,-117.161087'
 SF_coords = '37.7749,-122.4194'
+REDD_coords = '40.585040,-122.361139'
+SAC_coords = '38.592792,-121.480819'
+FRES_coords = '36.767301,-119.788392'
 
 
 def load_full_df(path_to_data) -> pd.DataFrame:
@@ -56,7 +61,13 @@ def save_query(df_today: pd.DataFrame, name, dir, add_to_main=False, path_to_mai
     df_today.to_csv(f'{dir}/data/{name}/query_{name}_{date_and_time}.csv', index=False, encoding='utf-8-sig')
 
     # Add query to all queries for specific location
-    df_name = pd.read_csv(f'{dir}/data/{name}/all_queries_{name}.csv')
+    try:
+        df_name = pd.read_csv(f'{dir}/data/{name}/all_queries_{name}.csv')
+    except Exception as e:
+        print(e)
+        print(f'Main CSV for {name} does not exist, attempting to create it')
+        df_name = df_today
+
     df_name_full = join_dfs(df_name, df_today)
     df_name_full.to_csv(f'{dir}/data/{name}/all_queries_{name}.csv', index=False, encoding='utf-8-sig')
     print(f'{name}: {df_name_full.shape[0] - df_name.shape[0]} tweets added to {name} main csv')
