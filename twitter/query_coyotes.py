@@ -29,11 +29,11 @@ def main():
     model_path = 'coyotes/bayes_model/best_bayes_pipeline.pkl'
 
     # --- LA ---
-    # new_query(api, query, LA_coords, 'la', model_path, 'coyotes', all_queries_path)
+    new_query(api, query, LA_coords, 'la', model_path, 'coyotes', all_queries_path)
     # # --- SD ---
-    # new_query(api, query, SD_coords, 'sd', model_path, 'coyotes', all_queries_path)
+    new_query(api, query, SD_coords, 'sd', model_path, 'coyotes', all_queries_path)
     # # --- SF ---
-    # new_query(api, query, SF_coords, 'sf', model_path, 'coyotes', all_queries_path)
+    new_query(api, query, SF_coords, 'sf', model_path, 'coyotes', all_queries_path)
     # --- Redding ---
     new_query(api, query, REDD_coords, 'redding', model_path, 'coyotes', all_queries_path)
     # --- Sacramento ---
