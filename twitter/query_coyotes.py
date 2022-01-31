@@ -25,7 +25,8 @@ def main():
 
     api = authenticate('/Users/Isaacbolo/Licenses/twitter.csv')
     all_queries_path = 'coyotes/data/all_queries.csv'
-    query = f'coyotes OR coyote -{" -".join(irrelevant_words)} -is:retweet'
+    # query = f'coyotes OR coyote -{" -".join(irrelevant_words)} -is:retweet'
+    query = f'coyotes OR coyote -is:retweet'
     model_path = 'coyotes/bayes_model/best_bayes_pipeline.pkl'
 
     # --- LA ---
