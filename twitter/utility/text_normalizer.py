@@ -81,7 +81,7 @@ def tweet_preprocessor(tweet: str) -> str:
     # Replace '’' with "'"
     tweet = re.sub(r"’", "'", tweet)
 
-    # Expand contractions
+    # Expand contractions.py
     tweet = expand_contractions(tweet, contraction_re)
 
     # Remove usernames and '#' from tweets
@@ -134,7 +134,7 @@ def tweet_preprocessor_add_pos(tweet: str) -> str:
     # Replace '’' with "'"
     tweet = re.sub(r"’", "'", tweet)
 
-    # Expand contractions
+    # Expand contractions.py
     tweet = expand_contractions(tweet, contraction_re)
 
     # Remove usernames and '#' from tweets
