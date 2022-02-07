@@ -24,10 +24,11 @@ def main():
                         'indian', 'ducks', 'game', 'school', 'arizona', 'nhl', 'win']
 
     api = authenticate('/Users/Isaacbolo/Licenses/twitter.csv')
-    all_queries_path = 'coyotes/data/all_queries.csv'
+    all_queries_path = 'coyotes/data/all_queries_01.csv'
     # query = f'coyotes OR coyote -{" -".join(irrelevant_words)} -is:retweet'
     query = f'coyotes OR coyote -is:retweet'
-    model_path = 'coyotes/bayes_model/best_bayes_pipeline.pkl'
+    # model_path = 'coyotes/bayes_model/best_bayes_pipeline.pkl'  # old model
+    model_path = 'coyotes/bayes_model/best_bayes_model_01.pkl'
 
     # --- LA ---
     new_query(api, query, LA_coords, 'la', model_path, 'coyotes', all_queries_path)
