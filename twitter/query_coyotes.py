@@ -10,6 +10,7 @@ def new_query(api, query, coords, location, model_path, directory, all_queries_p
     df = normalize_df(df)
     df = add_classification_to_df(df, model_path)
     df = add_sentiment_to_df(df)
+    add_location_column(df, location)
     save_query(df, name=location, add_to_main=True, path_to_main=all_queries_path, dir=directory)
 
 

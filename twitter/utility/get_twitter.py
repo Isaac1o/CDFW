@@ -44,9 +44,9 @@ def process_status(status) -> dict:
     """
     status_info = {'created': status.created_at,
                    'tweet': status.full_text,
-                   'tweet_id': status.id,
+                   'tweet_id': str(status.id),  # convert to string so excel doesn't convert to exponential
                    'hashtags': [hashtag['text'] for hashtag in status.entities['hashtags']],
-                   'user_id': status.user.id,
+                   'user_id': str(status.user.id),  # convert to string so excel doesn't convert to exponential
                    'username': status.user.screen_name,
                    'location': status.user.location,
                    'num_followers': status.user.followers_count,

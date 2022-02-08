@@ -33,6 +33,10 @@ def normalize_df(df) -> pd.DataFrame:
     return df
 
 
+def add_location_column(df, location:str):
+    df['query_location'] = location
+
+
 def join_dfs(df1, df2) -> pd.DataFrame:
     """
     Stacks two dataframes and remove duplicate rows
