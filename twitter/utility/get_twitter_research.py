@@ -23,15 +23,31 @@ def query_to_json(data, file_path):
         json.dump(data, f)
 
 
-def format_response(response):
+def format_response(response, existing_dict=None):
     """
     Formats response object into a dictionary with 3 keys: data, user, places.
     - data is a dictionary with {tweet_id: tweet_data}
     - users is a dictionary with {user_id: user_data}
     - places is a dictionary with {place_id: place_data}
+
+    If existing_dict is not None, then append response to the corresponding keys of exisiting_dict
+    :param existing_dict: Dictionary containing previous pages of tweet data
     :param response: response object returned from twitter api
     :return:
     """
+    if existing_dict:
+        for data in response.data:
+            id = str(data['id'])
+            existing_dict['data'][id] = data.data
+        for user in response.includes['users']:
+            user_id = str(user['id'])
+            existing_dict['users'][user_id] = user.data
+        for place in response.includes['places']:
+            place_id = str(place['id'])
+            existing_dict['places'][place_id] = place.data
+
+        return existing_dict
+
     info = {
         'data': {str(data['id']): data.data for data in response.data},
         'users': {str(user['id']): user.data for user in response.includes['users']},
@@ -41,9 +57,10 @@ def format_response(response):
     return info
 
 
-def search_twitter(client, query, next_token=None, start_time=None, end_time=None, max_results=500):
+def search_twitter(client, query, next_token=None, existing_data=None, start_time=None, end_time=None, max_results=500):
     """
     Queries one page and returns the next token and data in a dictionary.
+    :param existing_data:
     :param next_token: Token for next page
     :param client:
     :param query:
@@ -66,7 +83,7 @@ def search_twitter(client, query, next_token=None, start_time=None, end_time=Non
         end_time=end_time,
         next_token=next_token
     )
-    data = format_response(response)
+    data = format_response(response, existing_dict=existing_data)
 
     return data, response.meta['next_token'], response.meta['result_count']
 
@@ -85,6 +102,7 @@ def paginator(client, query, start_time=None, end_time=None, num_tweets=100, fil
     max_results = 500
     count = 0
     next_token = None
+    data = None
     if num_tweets < max_results:
         max_results = num_tweets
     while count < num_tweets:
@@ -92,16 +110,26 @@ def paginator(client, query, start_time=None, end_time=None, num_tweets=100, fil
             client,
             query,
             next_token=next_token,
+            existing_data=data,
             start_time=start_time,
             end_time=end_time,
             max_results=max_results
         )
+        count += result_count
+
+    if file_path:
+        query_to_json(data, file_path)
+
+    return data
 
 
 
 
 # client = authenticate_research('/Users/Isaacbolo/Licenses/twitter_research.csv')
-# d = search_twitter(client, 'dog has:geo', max_results=10)
+# d, tk, ct = search_twitter(client, 'dog has:geo', max_results=10)
+# print(type(d))
+# c, tk2, ct2 = search_twitter(client, 'cat has:geo', max_results=10, existing_data=d)
+# print(c)
 # query_to_json(d, '/tmp/test_json.json')
 
 
