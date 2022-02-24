@@ -26,21 +26,6 @@ def authenticate(twitter_auth_filename):
     return api
 
 
-def authenticate_research(research_auth_filename):
-    """
-    Return twitter api object for research license
-    """
-    consumer_key, consumer_secret, access_token, access_token_secret, bearer = loadkeys(research_auth_filename)
-    client = tweepy.Client(bearer_token=bearer,
-                           consumer_key=consumer_key,
-                           consumer_secret=consumer_secret,
-                           access_token=access_token,
-                           access_token_secret=access_token_secret,
-                           return_type=dict,         # Returns python dictionary instead of response object
-                           wait_on_rate_limit=True)  # Whether to wait when rate limit is reached
-    return client
-
-
 def create_df(searched_tweets: List[dict]) -> pd.DataFrame:
     """
     Given list of dictionaries, where each dictionary is information from one tweet. Return a dataframe
