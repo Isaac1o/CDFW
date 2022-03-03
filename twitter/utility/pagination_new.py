@@ -3,6 +3,8 @@
 # See LICENSE for details.
 
 from math import inf
+import time
+# from utility.get_twitter_research import paginator_sleep_time
 
 
 class Paginator2:
@@ -42,20 +44,34 @@ class Paginator2:
             return
 
         count = 0
+        page = 0
         for response in PaginationIterator(self.method, *self.args,
                                            **self.kwargs):
+            time.sleep(1.2)
+            print('sleeping in page', page, 'result count', response.meta['result_count'])
+            # if response.meta['result_count'] > 0:
+                # print(response)
+            page += 1
             if response.data is not None:
                 for data in response.data:
                     yield data
-                    # yield response.includes['users']
-                    # yield response.includes['users']
                     count += 1
                     if count == limit:
                         yield response.includes['users']
                         yield response.includes['places']
                         return
-                yield response.includes['users']
-                yield response.includes['places']
+
+                yield response
+
+                # if 'users' in response.includes:
+                #     yield response.includes['users']
+                # else:
+                #     yield None
+                #
+                # if 'places' in response.includes:
+                #     yield response.includes['places']
+                # else:
+                #     yield None
                 return
 
 
