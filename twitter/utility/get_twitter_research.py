@@ -218,14 +218,11 @@ if __name__ == '__main__':
     id_coords_pairs = load_coords('../coyotes/geo_grid/R_code_from_Brett/grid_out.csv',
                                   county)
 
-<<<<<<< HEAD
 #   i = 0
     i = 2530
     iters = 0
-=======
     i = 0
     # iters = 0
->>>>>>> master
     error_attempts = 0
 
     print(f'Searching from {start_time} to {end_time}')
