@@ -209,13 +209,13 @@ def load_coords(filepath, get_county=None):
 paginator_sleep_time = 1.5
 if __name__ == '__main__':
     time_start = time.time()
-    client = authenticate_research('/Users/Isaacbolo/Licenses/twitter_research.csv', True)
+    client = authenticate_research('/home/ec2-user/twitter_research.csv', True)
     start_time = '2010-01-01T00:00:00Z'
     end_time = '2022-03-02T00:00:00Z'
-    county = 'LOS ANGELES'
+#    county = 'LOS ANGELES'
 
-    # county = None
-    id_coords_pairs = load_coords('/Users/Isaacbolo/CDFW/CDFW/twitter/coyotes/geo_grid/R_code_from_Brett/grid_out.csv',
+    county = None
+    id_coords_pairs = load_coords('../coyotes/geo_grid/R_code_from_Brett/grid_out.csv',
                                   county)
 
     i = 0
@@ -239,7 +239,7 @@ if __name__ == '__main__':
                                 start_time,
                                 end_time,
                                 inf,
-                                '/Users/Isaacbolo/CDFW/CDFW/twitter/coyotes/data/grid_data',
+                                '../coyotes/data/grid_data',
                                 current_id)
             count = 0
             if 'tweets' in results:
