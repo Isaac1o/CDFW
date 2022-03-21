@@ -218,14 +218,15 @@ if __name__ == '__main__':
     id_coords_pairs = load_coords('../coyotes/geo_grid/R_code_from_Brett/grid_out.csv',
                                   county)
 
-    i = 0
+#   i = 0
+    i = 2530
     iters = 0
     error_attempts = 0
 
     print(f'Searching from {start_time} to {end_time}')
     print('------------')
 
-    while iters < len(id_coords_pairs) + 1:
+    while i < len(id_coords_pairs) + 1:
         current_id = id_coords_pairs[i][0]
         coords = id_coords_pairs[i][1]
 
