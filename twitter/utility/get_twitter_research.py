@@ -219,13 +219,13 @@ if __name__ == '__main__':
                                   county)
 
     i = 0
-    iters = 0
+    # iters = 0
     error_attempts = 0
 
     print(f'Searching from {start_time} to {end_time}')
     print('------------')
 
-    while iters < len(id_coords_pairs) + 1:
+    while i < len(id_coords_pairs) + 1:
         current_id = id_coords_pairs[i][0]
         coords = id_coords_pairs[i][1]
 

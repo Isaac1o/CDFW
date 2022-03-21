@@ -24,7 +24,8 @@ def main():
                         'predictions', 'sports', 'restaurant', 'soccer', 'basketball', 'tennis', 'ball',
                         'indian', 'ducks', 'game', 'school', 'arizona', 'nhl', 'win']
 
-    api = authenticate('/home/ec2-user/twitter.csv')
+    # api = authenticate('/home/ec2-user/twitter.csv')
+    api = authenticate('/Users/Isaacbolo/Licenses/twitter.csv')
     all_queries_path = 'coyotes/data/all_queries_01.csv'
     # query = f'coyotes OR coyote -{" -".join(irrelevant_words)} -is:retweet'
     query = f'coyotes OR coyote -is:retweet'
