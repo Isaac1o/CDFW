@@ -220,8 +220,6 @@ if __name__ == '__main__':
 
 #   i = 0
     i = 2530
-    iters = 0
-    i = 0
     # iters = 0
     error_attempts = 0
 
