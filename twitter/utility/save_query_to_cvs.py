@@ -213,4 +213,4 @@ if __name__ == '__main__':
     # print(df)
     p = '../coyotes/data/grid_data'
     df1 = combine_records(p)
-    df1.to_parquet('test2.gzip', index=None)
+    df1.to_parquet('coyote_tweets2.gzip', index=None)

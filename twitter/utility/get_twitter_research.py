@@ -209,7 +209,8 @@ def load_coords(filepath, get_county=None):
 paginator_sleep_time = 1.5
 if __name__ == '__main__':
     time_start = time.time()
-    client = authenticate_research('/home/ec2-user/twitter_research.csv', True)
+    # client = authenticate_research('/home/ec2-user/twitter_research.csv', True)
+    client = authenticate_research('/Users/Isaacbolo/Licenses/twitter_research.csv', True)
     start_time = '2010-01-01T00:00:00Z'
     end_time = '2022-03-02T00:00:00Z'
 #    county = 'LOS ANGELES'
@@ -218,16 +219,19 @@ if __name__ == '__main__':
     id_coords_pairs = load_coords('../coyotes/geo_grid/R_code_from_Brett/grid_out.csv',
                                   county)
 
-#   i = 0
-    i = 3798
+    i = 0
+#     i = 3798
     # iters = 0
     error_attempts = 0
 
     print(f'Searching from {start_time} to {end_time}')
     print('------------')
-
-    while i < len(id_coords_pairs) + 1:
+    # missing_grids = [3204, 3205, 3206, 3207, 3208, 3209, 3210, 3211, 3212, 3480, 3481, 3482, 3483, 3484, 3375, 3381, 3260, 3261, 3263, 3267, 3431, 3434, 3435, 3691, 1774, 3316, 3317, 3318]
+    # for i in missing_grids:
+    while i < len(id_coords_pairs):
+    # while i < len(missing_grids):
         try:
+            # grid = missing_grids[i]
             current_id = id_coords_pairs[i][0]
             coords = id_coords_pairs[i][1]
 
