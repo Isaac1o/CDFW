@@ -227,43 +227,43 @@ if __name__ == '__main__':
     print('------------')
 
     while i < len(id_coords_pairs) + 1:
-	try:
+        try:
             current_id = id_coords_pairs[i][0]
             coords = id_coords_pairs[i][1]
 
-	        # for grid_id, coords in id_coords_pairs:
-	        #     current_id = grid_id
+            # for grid_id, coords in id_coords_pairs:
+            #     current_id = grid_id
             print('grid_id', current_id)
-	    time.sleep(1)
-	    try:
-	        results = paginator(client,
-	                            coords,
-                                    start_time,
-	                            end_time,
-                                    inf,
-	                            '../coyotes/data/grid_data',
-	                            current_id)
-	        count = 0
+            time.sleep(1)
+            try:
+                results = paginator(client,
+                                    coords,
+                                        start_time,
+                                    end_time,
+                                        inf,
+                                    '../coyotes/data/grid_data',
+                                    current_id)
+                count = 0
                 if 'tweets' in results:
-                  count = len(results['tweets'])
-	          print(f'Found {count} tweets')
-	          i += 1
-	          error_attempts = 0
-             except tweepy.errors.TwitterServerError as e:
-	          print(f'503 Error, restarting at grid_id {current_id}')
-	          print(e)
-      	          time.sleep(3)
-	          error_attempts += 1
-	          paginator_sleep_time += 0.15
-        	  if error_attempts == 20:
-	                # After 20 errors on the same grid_id move on to the next grid_id
-	              i += 1
-	              print('Error attempts reached. Skipping grid_id', current_id)
-	          continue
+                    count = len(results['tweets'])
+                    print(f'Found {count} tweets')
+                    i += 1
+                    error_attempts = 0
+            except tweepy.errors.TwitterServerError as e:
+                print(f'503 Error, restarting at grid_id {current_id}')
+                print(e)
+                time.sleep(3)
+                error_attempts += 1
+                paginator_sleep_time += 0.15
+                if error_attempts == 20:
+                        # After 20 errors on the same grid_id move on to the next grid_id
+                    i += 1
+                    print('Error attempts reached. Skipping grid_id', current_id)
+                    continue
 
-	      print('------------')
+            print('------------')
         except Exception as e:
             print(e)
             continue
-    print('time', time.time() - time_start)
+        print('time', time.time() - time_start)
 
