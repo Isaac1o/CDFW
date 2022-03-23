@@ -219,7 +219,7 @@ if __name__ == '__main__':
                                   county)
 
 #   i = 0
-    i = 3799
+    i = 3798
     # iters = 0
     error_attempts = 0
 
@@ -265,5 +265,5 @@ if __name__ == '__main__':
         except Exception as e:
             print(e)
             continue
-        print('time', time.time() - time_start)
+    print('time', time.time() - time_start)
 
