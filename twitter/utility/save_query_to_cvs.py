@@ -1,4 +1,8 @@
+import os
+
 import pandas as pd
+import json
+from datetime import datetime
 
 from utility.get_twitter import *
 from datetime import datetime
@@ -119,4 +123,94 @@ def add_sentiment_to_df(df) -> pd.DataFrame:
     return df
 
 
+def parse_json(filename):
+    """
+    Given a json file queried from get_twitter_research.py, parse tweet text, grid_id, tweet_id,
+    author_id, created_at, full_name, place_type, place_id.
+    :param filename:
+    :return:
+    """
+    with open(filename, 'r') as f:
+        content = f.read()
+        data = json.loads(content)
 
+    if len(data['tweets']) == 0:
+        # return empty df if there is no data
+
+        return pd.DataFrame(data={
+            'grid_id': int(data['grid_id']),
+            'tweet_id': None,
+            'created_at': None,
+            'text': None,
+            'author_id': None,
+            'place_id': None,
+            'lat': None,
+            'long': None,
+            'full_name': None,
+            'name': None,
+            'place_type': None
+        }, index=[0])
+
+    records = []
+    for tweet_id in data['tweets'].keys():
+        tweet_data = data['tweets'][tweet_id]
+        record = {}
+        record['grid_id'] = int(data['grid_id'])
+        record['tweet_id'] = str(tweet_id)
+        record['created_at'] = datetime.strptime(tweet_data['created_at'], "%Y-%m-%dT%H:%M:%S.000Z")
+        record['text'] = tweet_data['text']
+        record['author_id'] = str(tweet_data['author_id'])
+        # record['place_id'] = tweet_data.get('geo', None).get('place_id', None)
+        geo_info = tweet_data.get('geo', None)
+        if geo_info and len(geo_info) > 0:
+            record['place_id'] = geo_info.get('place_id', None)
+            if record['place_id']:
+                str(record['place_id'])
+            coords = geo_info.get('coordinates', None)
+            if coords:
+                record['lat'] = coords['coordinates'][0]
+                record['long'] = coords['coordinates'][1]
+            else:
+                record['lat'] = None
+                record['long'] = None
+
+            if record['place_id'] and record['place_id'] in data['places'].keys():
+                try:
+                    record['full_name'] = data['places'][record['place_id']]['full_name']
+                except:
+                    print(data)
+                record['name'] = data['places'][record['place_id']]['name']
+                record['place_type'] = data['places'][record['place_id']]['place_type']
+            else:
+                record['full_name'] = None
+                record['name'] = None
+                record['place_type'] = None
+        else:
+            record['lat'] = None
+            record['long'] = None
+            record['full_name'] = None
+            record['name'] = None
+            record['place_type'] = None
+
+        records.append(record)
+
+    return pd.DataFrame.from_records(records)
+
+
+def combine_records(dir_path):
+    df = pd.DataFrame()
+    for filename in os.listdir(dir_path):
+        if filename.endswith('.json'):
+            path = os.path.join(dir_path, filename)
+            df_ = parse_json(path)
+            df = pd.concat([df, df_], axis=0)
+    return df.sort_values('grid_id').reset_index(drop=True)
+
+
+if __name__ == '__main__':
+    # pd.set_option('display.max_columns', None)
+    # df = parse_json('../coyotes/data/grid_data/grid_1355.json')
+    # print(df)
+    p = '../coyotes/data/grid_data'
+    df1 = combine_records(p)
+    df1.to_parquet('test2.gzip', index=None)
