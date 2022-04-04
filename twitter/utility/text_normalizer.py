@@ -137,7 +137,7 @@ def load_preprocessor():
             corrector='twitter',
             unpack_hashtags=True,
             unpack_contractions=True,
-            spell_correction=False,
+            spell_correction=True,
             spell_correct_elong=True,
             tokenizer=SocialTokenizer(lowercase=True).tokenize,
             dicts=[emoticons],
@@ -181,8 +181,8 @@ def tweet_preprocessor2(tweet):
     tweet = text_preprocessor.pre_process_doc(tweet)
 
     # Remove punctuation and spell check
-    punctuation= '''!()-[]{};:'"\<>,./?@#$%^&*_~'''
-    sp = load_spellcheck()
+    punctuation= '''!()-[]{};:'"\<=>,./?@#$%^&*_~'''
+    # sp = load_spellcheck()
     # tweet = [sp.correct(w) if (not w.startswith('<') or not w.endswith('>')) else w for w in tweet]
     # tweet = [sp.correct(w) for w in tweet]
     tweet = [w for w in tweet if w.isalnum()]
@@ -196,8 +196,20 @@ def tweet_preprocessor2(tweet):
 
     return ' '.join(tweet)
 
+
+def simple_tokenizer(tweet):
+    return tweet.split(' ')
+
 #
-# text = '@phoenixcoyotes. Nicccce starting the 3rd with the Power Play. Cash in COYOTES #runaway https://www.atttt.com'
+# text = '''@phoenixcoyotes. Nicccce starting the 3rd with the Power Play!!
+#
+# I beileved in us.
+#
+# Cash in COYOTES #runaway https://www.atttt.com'''
 # a = tweet_preprocessor2(text)
-# a = a.split(' ')
-# print(a)
+# b = tweet_preprocessor(text)
+# print(b)
+# print(simple_tokenizer(b))
+# # print(b)
+# # a = a.split(' ')
+# # print(a)
