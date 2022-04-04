@@ -1,5 +1,12 @@
 import spacy
 import re
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from ekphrasis.classes.preprocessor import TextPreProcessor
+from ekphrasis.classes.tokenizer import SocialTokenizer
+from ekphrasis.dicts.emoticons import emoticons
+from ekphrasis.classes.spellcorrect import SpellCorrector
+
 
 """
 This library is used for preprocessing tweets which are fed into CountVectorizer() which creates a wordcount
@@ -37,6 +44,10 @@ contractions_dict = {"ain't": "are not", "'s":" is", "aren't": "are not", "can't
                      "2day": "today", "tmmrw": "tomorrow"}
 
 sp = None
+ekp = None
+spellcheck = None
+lem = None
+sw = None
 contraction_re = re.compile('|'.join(contractions_dict.keys()))
 
 
@@ -53,25 +64,10 @@ def expand_contractions(s, contraction_re, contractions_dict=contractions_dict):
     return contraction_re.sub(replace, s)
 
 
-def tweet_preprocessor_old(tweet: str) -> str:
+def tweet_preprocessor(tweet: str, lowercase=False) -> str:
     """
     Removes numbers, words that start with @, links, and words less than 2 characters
-    :param tweet:
-    :return:
-    """
-    sp = load_spacy()
-    words = sp(tweet)
-    words = [w for w in words if w.is_alpha is True]
-    words = [w.text for w in words]
-    words = [w for w in words if not w.startswith('@') and not w.startswith('http')]
-    words = [w for w in words if len(w) >= 2]
-    words = ' '.join(words)
-    return words
-
-
-def tweet_preprocessor(tweet: str) -> str:
-    """
-    Removes numbers, words that start with @, links, and words less than 2 characters
+    :param lowercase:
     :param tweet:
     :return:
     """
@@ -97,6 +93,9 @@ def tweet_preprocessor(tweet: str) -> str:
     # Remove all special characters
     tweet = re.sub(r'!|@|#|\$|%|\^|&|\*|\(|\)|_|~|\+', '', tweet).strip()
 
+    # Remove new lines
+    tweet = tweet.replace('\n', ' ')
+
     sp = load_spacy()
     words = sp(tweet)
     # Remove urls
@@ -112,68 +111,93 @@ def tweet_preprocessor(tweet: str) -> str:
     words = [w.lemma_ for w in words]
 
     # Remove spaces
-    words = [w for w in words if w != ' ']
+    words = [w for w in words if ' ' not in w]
 
     # Remove urls if they didn't get removed earlier
     words = [w for w in words if not w.startswith('http')]
 
     words = ' '.join(words)
 
+    if lowercase:
+        return words.lower()
     return words
 
 
-def tweet_preprocessor_add_pos(tweet: str) -> str:
-    """
-    Removes numbers, words that start with @, links, and words less than 2 characters
-    :param tweet:
-    :return:
-    """
-    # Lowercase
-    tweet = tweet.lower()
+def tweet_preprocessor_lowercased(tweet):
+    return tweet_preprocessor(tweet, True)
 
-    # Replace '’' with "'"
-    tweet = re.sub(r"’", "'", tweet)
 
-    # Expand contractions.py
-    tweet = expand_contractions(tweet, contraction_re)
+def load_preprocessor():
+    global ekp
+    if ekp is None:
+        ekp = TextPreProcessor(
+            normalize=['url', 'email', 'percent', 'money', 'phone', 'user',
+                       'time', 'url', 'date', 'number'],
+            segmenter='twitter',
+            corrector='twitter',
+            unpack_hashtags=True,
+            unpack_contractions=True,
+            spell_correction=False,
+            spell_correct_elong=True,
+            tokenizer=SocialTokenizer(lowercase=True).tokenize,
+            dicts=[emoticons],
+            remove_tags=True
+        )
+    return ekp
 
+
+def load_spellcheck():
+    global spellcheck
+    if spellcheck is None:
+        spellcheck = SpellCorrector(corpus='twitter')
+    return spellcheck
+
+
+def load_lem():
+    global lem
+    if lem is None:
+        lem = WordNetLemmatizer()
+    return lem
+
+
+def load_stopwords():
+    global sw
+    if sw is None:
+        sw = set(stopwords.words('english'))
+    return sw
+
+
+def tweet_preprocessor2(tweet):
     # Remove usernames and '#' from tweets
-    tweet = re.sub(r'@\S+|#', '', tweet)
-
+    # tweet = re.sub(r'@\S+|#', '', tweet)
     # Replace '@' with at
     tweet = re.sub(r'\s@\s', ' at ', tweet)
-
-    # Replace '&amp' or '&' with and
+    # Replace '&amp' or '&' with 'and'
     tweet = re.sub(r'\s&amp\s', ' and ', tweet)
     tweet = re.sub(r'\s&\s', ' and ', tweet)
 
-    # Remove all special characters
-    tweet = re.sub(r'!|@|#|\$|%|\^|&|\*|\(|\)|_|~|\+', '', tweet).strip()
+    # Run tweet through tweet preprocessor and tokenize words
+    text_preprocessor = load_preprocessor()
+    tweet = text_preprocessor.pre_process_doc(tweet)
 
-    sp = load_spacy()
-    words = sp(tweet)
-    # Remove urls
-    words = [w for w in words if not w.like_url]
+    # Remove punctuation and spell check
+    punctuation= '''!()-[]{};:'"\<>,./?@#$%^&*_~'''
+    sp = load_spellcheck()
+    # tweet = [sp.correct(w) if (not w.startswith('<') or not w.endswith('>')) else w for w in tweet]
+    # tweet = [sp.correct(w) for w in tweet]
+    tweet = [w for w in tweet if w.isalnum()]
+    tweet = [w for w in tweet if w not in punctuation]
 
-    # Remove digit tokens
-    words = [w for w in words if not w.is_digit]
+    # Lemmatize and remove stop words
+    lem = load_lem()
+    # sw = load_stopwords()
+    # tweet = [lem.lemmatize(w) for w in tweet if w not in sw]
+    tweet = [lem.lemmatize(w) for w in tweet]
 
-    # Remove punctuation
-    words = [w for w in words if not w.is_punct]
+    return ' '.join(tweet)
 
-    # Add pos tagging and remove punctuation
-    words = [f'{w.lemma_} {w.pos_}' for w in words]
-
-    # Remove spaces
-    words = [w for w in words if w != ' ']
-
-    # Remove urls if they didn't get removed earlier
-    words = [w for w in words if not w.startswith('http')]
-
-    words = ' '.join(words)
-
-    return words
-
-
-# text = "@john_cat hello, hadn’t last night I saw a coyote eating 3 squirrels. &amp !@# @ It### ~!@#$%^&*()_+ was HUGE and I saw blood everywhere 2day. Check it out here http:1232_photo.png"
-# print(tweet_preprocessor(text))
+#
+# text = '@phoenixcoyotes. Nicccce starting the 3rd with the Power Play. Cash in COYOTES #runaway https://www.atttt.com'
+# a = tweet_preprocessor2(text)
+# a = a.split(' ')
+# print(a)
