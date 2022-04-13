@@ -44,7 +44,7 @@ def update_graph(month):
                         y="compound_sent_score",
                         title='Sentiment Score over time')
     
-    return fig
+    return [fig]
 
 if __name__ == '__main__':
     app.run_server(debug=True,host = '127.0.0.1')
